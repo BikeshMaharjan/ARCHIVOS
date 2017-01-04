@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/settings_category1"
+        android:key="@string/settings_category1_key">
+
+        <Preference
+            android:key="key_testConnection"
+            android:title="@string/string_TestConnection"
+            android:summary="@string/string_summaryTestConnection"/>
+
+        <SwitchPreference
+            android:title="Sync"
+            android:summary="Synchronize with server automatically"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_category2"
+        android:key="key_settingCategory2">
+
+        <EditTextPreference
+            android:title="@string/titleIPaddress"
+            android:key="key_titleIPAddress"
+            android:defaultValue="@string/hint_ip"/>
+
+        <EditTextPreference
+            android:title="@string/titlePort"
+            android:defaultValue="21"
+            android:key="key_Port"/>
+        <EditTextPreference
+            android:title="@string/titleUsername"
+            android:key="key_Username"
+            android:defaultValue=""/>
+        <EditTextPreference
+            android:title="@string/titlePassword"
+            android:key="key_Password"
+            android:defaultValue=""/>
+        <EditTextPreference
+            android:title="@string/titleDirectory"
+            android:defaultValue="Cassis/STB"
+            android:key="key_Directory"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>
