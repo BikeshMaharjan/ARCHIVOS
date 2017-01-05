@@ -1,6 +1,8 @@
-package com.example.bikesh.archivos;
+package com.example.bikesh.archivos.Class;
 
 import android.preference.PreferenceManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by bikesh on 1/4/17.
@@ -20,4 +22,8 @@ public class CommonData {
     public static String PASSWORD = "";
     public static String DIRECTORY = "";
     public static String PORT = "";
+
+    public static ArrayList<String> mobileArray = new ArrayList();
 }
+
+

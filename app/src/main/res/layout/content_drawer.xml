@@ -10,14 +10,15 @@
     android:paddingRight="@dimen/custom_activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.bikesh.archivos.DrawerActivity"
+    tools:context="com.example.bikesh.archivos.Views.DrawerActivity"
     tools:showIn="@layout/app_bar_drawer">
 
 
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
     </FrameLayout>
 
 </RelativeLayout>

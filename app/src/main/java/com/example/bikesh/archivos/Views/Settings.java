@@ -1,21 +1,24 @@
-package com.example.bikesh.archivos;
+package com.example.bikesh.archivos.Views;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+
+import com.example.bikesh.archivos.Class.CommonData;
+import com.example.bikesh.archivos.Class.FTPConnection;
+import com.example.bikesh.archivos.R;
 
 /**
  * Created by bikesh on 1/4/17.
  */
 
 public class Settings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
-
     SharedPreferences storedPrefs;
-
 
     @Override
     public void onResume() {
@@ -64,10 +67,20 @@ public class Settings extends PreferenceFragment implements SharedPreferences.On
                     @Override
                     public void run() {
                         try {
-                            FTPConnection ftpConnection = new FTPConnection("10.2.1.70","micnepal","nepal123");
-                            ftpConnection.listFiles();
+                            FTPConnection ftpConnection = new FTPConnection();
+                            boolean result = ftpConnection.connectionTest(CommonData.IPADDRESS,CommonData.USERNAME,CommonData.PASSWORD);
+                            ftpConnection.disconnect();
+
+                            if (result) {
+                                showAlertDialog(getResources().getString(R.string.success),"Connection Successful");
+                            } else {
+                                showAlertDialog(getResources().getString(R.string.error),"Connection Unsuccessful");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            showAlertDialog(getResources().getString(R.string.error), e.getLocalizedMessage());
+                            Log.d("BIKI","" + e.getLocalizedMessage());
+
                         }
                     }
                 }).start();
@@ -111,7 +124,6 @@ public class Settings extends PreferenceFragment implements SharedPreferences.On
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d("BIKI", "key: " + key);
         if(key.equals(CommonData.KEY_PREF_IPADDRESS)){
             Preference ipPreference = findPreference(key);
             ipPreference.setSummary(sharedPreferences.getString(key,""));
@@ -128,6 +140,26 @@ public class Settings extends PreferenceFragment implements SharedPreferences.On
             Preference prefPort = findPreference(key);
             prefPort.setSummary(sharedPreferences.getString(key,""));
         }
+    }
 
+    //show alert dialog
+    public void showAlertDialog(final String title,final String message) {
+
+        new Thread() {
+            public void run() {
+                getActivity().runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run(){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        alertDialogBuilder.setTitle(title);
+                        alertDialogBuilder.setMessage(message);
+                        alertDialogBuilder.setCancelable(true);
+                        AlertDialog alert = alertDialogBuilder.create();
+                        alert.show();
+                    }
+                });
+            }
+        }.start();
     }
 }

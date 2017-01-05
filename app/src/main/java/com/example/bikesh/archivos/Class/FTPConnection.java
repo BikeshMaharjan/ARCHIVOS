@@ -1,4 +1,4 @@
-package com.example.bikesh.archivos;
+package com.example.bikesh.archivos.Class;
 
 import android.util.Log;
 
@@ -10,6 +10,7 @@ import org.apache.commons.net.ftp.FTPListParseEngine;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by bikesh on 1/4/17.
@@ -17,7 +18,7 @@ import java.io.IOException;
 
 public class FTPConnection  {
    FTPClient ftpClient = null;
-
+    public FTPConnection() {}
     public FTPConnection(String host, String user, String pwd) throws Exception{
         ftpClient = new FTPClient();
         int reply;
@@ -32,21 +33,41 @@ public class FTPConnection  {
         ftpClient.enterLocalPassiveMode();
     }
 
-    public void listFiles() throws IOException {
-        if(this.ftpClient.isConnected()) {
-           // String[] filenames = ftpClient.listNames("/Cassis/STB/CSV");
+    public ArrayList<String> listFiles(String directory) throws IOException {
+        ArrayList<String> retrievedfiles = new ArrayList<String>();
 
-            //FTPFile[] files = ftpClient.listFiles();
-            FTPListParseEngine engine = ftpClient.initiateListParsing("/Cassis/STB/CSV");
+        if(this.ftpClient.isConnected()) {
+            FTPListParseEngine engine = ftpClient.initiateListParsing(directory);
 
             while (engine.hasNext()) {
                 FTPFile[] files = engine.getNext(25);  // "page size" you want
-
                 for (FTPFile file : files) {
-                    System.out.println(file.getName());
-                }
+                    retrievedfiles.add(file.getName());
 
+                }
             }
+        }
+        return retrievedfiles;
+    }
+
+
+    public boolean connectionTest(String host, String user, String pwd) throws Exception {
+        ftpClient = new FTPClient();
+        int reply;
+        ftpClient.connect(host);
+        reply = ftpClient.getReplyCode();
+        if (!FTPReply.isPositiveCompletion(reply)) {
+            ftpClient.disconnect();
+            throw new Exception("Exception in connecting to FTP Server");
+        }
+        ftpClient.login(user, pwd);
+        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        ftpClient.enterLocalPassiveMode();
+
+        if(this.ftpClient.isConnected()) {
+            return true;
+        } else {
+            return false;
         }
     }
 

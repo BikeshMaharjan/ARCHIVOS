@@ -92,4 +92,6 @@
     <string name="hintEntered">Entered</string>
     <string name="titlePassword">Password</string>
     <string name="titleDirectory">Directory</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
 </resources>
