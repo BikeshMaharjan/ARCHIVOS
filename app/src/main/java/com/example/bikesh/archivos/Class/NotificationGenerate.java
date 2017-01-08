@@ -22,9 +22,9 @@ public class NotificationGenerate {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_menu_camera)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setContentTitle("Archivos")
+                        .setContentText("New file found.");
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, DrawerActivity.class);

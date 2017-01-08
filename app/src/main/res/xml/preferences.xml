@@ -35,6 +35,7 @@
         <EditTextPreference
             android:title="@string/titlePassword"
             android:key="key_Password"
+            android:inputType="textPassword"
             android:defaultValue=""/>
         <EditTextPreference
             android:title="@string/titleDirectory"

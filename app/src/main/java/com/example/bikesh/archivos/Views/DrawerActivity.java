@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.bikesh.archivos.Class.CommonData;
 import com.example.bikesh.archivos.Class.FTPConnection;
@@ -63,7 +65,16 @@ public class DrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (!CommonData.tappedList.isEmpty())  {
+            CommonData.tappedList.remove(CommonData.tappedList.size());
+            String url = CommonData.DIRECTORY;
+            for (String urlPart :
+                    CommonData.tappedList) {
+                url += "/" + urlPart + "/" ;
+            }
+            listFilesfromDirectory(url);
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -81,12 +92,10 @@ public class DrawerActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,22 +125,38 @@ public class DrawerActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    FTPConnection ftpConnection = new FTPConnection(CommonData.IPADDRESS, CommonData.USERNAME, CommonData.PASSWORD);
-                    CommonData.mobileArray = ftpConnection.listFiles(directory);
-                    ftpConnection.disconnect();
-
-                    getFragmentManager().beginTransaction().replace(R.id.content_frame,new HomeFragment()).commit();
-
                     NotificationManager mNotificationManager =
                             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    NotificationGenerate notify = new NotificationGenerate();
-                    notify.generateNotification(getApplicationContext(), mNotificationManager );
+
+                    FTPConnection ftpConnection = new FTPConnection(CommonData.IPADDRESS, CommonData.USERNAME, CommonData.PASSWORD);
+                    CommonData.mobileArray = ftpConnection.listFiles(directory, getApplicationContext(),mNotificationManager);
+                    ftpConnection.disconnect();
+                    getFragmentManager().beginTransaction().replace(R.id.content_frame,new HomeFragment()).commit();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    showAlertDialog(getResources().getString(R.string.error),e.getLocalizedMessage());
                 }
             }
         }).start();
+    }
 
+    public void showAlertDialog(final String title,final String message) {
 
+        new Thread() {
+            public void run() {
+                DrawerActivity.this.runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run(){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DrawerActivity.this);
+                        alertDialogBuilder.setTitle(title);
+                        alertDialogBuilder.setMessage(message);
+                        alertDialogBuilder.setCancelable(true);
+                        AlertDialog alert = alertDialogBuilder.create();
+                        alert.show();
+                    }
+                });
+            }
+        }.start();
     }
 }

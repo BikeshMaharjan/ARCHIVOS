@@ -6,7 +6,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import com.example.bikesh.archivos.Class.CommonData;
@@ -79,8 +78,6 @@ public class Settings extends PreferenceFragment implements SharedPreferences.On
                         } catch (Exception e) {
                             e.printStackTrace();
                             showAlertDialog(getResources().getString(R.string.error), e.getLocalizedMessage());
-                            Log.d("BIKI","" + e.getLocalizedMessage());
-
                         }
                     }
                 }).start();

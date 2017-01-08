@@ -1,7 +1,5 @@
 package com.example.bikesh.archivos.Class;
 
-import android.preference.PreferenceManager;
-
 import java.util.ArrayList;
 
 /**
@@ -24,6 +22,8 @@ public class CommonData {
     public static String PORT = "";
 
     public static ArrayList<String> mobileArray = new ArrayList();
+
+    public static ArrayList<String> tappedList;
 }
 
 
